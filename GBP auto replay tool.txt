@@ -1,0 +1,223 @@
+You are a senior full-stack architect and SaaS engineer.
+
+Build a complete production-ready AI-powered SaaS platform called:
+
+"GBP SEO Auto Reply System"
+
+This system is designed for a digital marketing agency to manage multiple Google Business Profile clients and automatically generate SEO-optimized replies to reviews using AI.
+
+--------------------------------------------------
+
+🎯 CORE REQUIREMENTS:
+
+1. Multi-tenant SaaS architecture
+   - Each client has a separate login
+   - Data isolation per tenant
+   - Agency admin can manage all clients
+
+2. Google Business Profile Integration
+   - OAuth 2.0 authentication
+   - Store access_token and refresh_token securely
+   - Fetch reviews using API
+   - Post replies via API
+
+3. AI Reply System (OpenAI API)
+   - Generate human-like replies
+   - SEO-optimized (natural keyword usage, NOT spam)
+   - Include:
+       - business name
+       - primary keyword
+       - optional location
+   - Avoid repetition and keyword stuffing
+
+4. Auto + Semi-Auto Workflow
+   - Rating >= 4 → auto reply
+   - Rating == 3 → auto reply
+   - Rating <= 2 → send for client approval
+
+5. Client Dashboard
+   - Login system (JWT-based)
+   - View all reviews
+   - View AI-generated replies
+   - Approve / edit / reject negative review replies
+
+6. SEO Optimization Engine
+   - Each client defines:
+       - primary keyword
+       - secondary keywords
+       - location
+       - tone (friendly / professional / formal)
+   - AI must inject keywords naturally
+   - Use semantic variations (not repetition)
+
+7. Background Processing
+   - Cron job every 5 minutes
+   - Fetch new reviews
+   - Queue system (BullMQ or similar)
+   - Worker processes AI replies
+
+8. Human-like Behavior
+   - Random reply delay (2–15 minutes)
+   - Reply variation (no duplicate templates)
+
+9. Safety & Policy Engine
+   - Prevent:
+       - spammy replies
+       - repeated keywords
+       - promotional tone
+       - links
+   - Limit reply length (< 300 characters)
+
+10. Analytics Dashboard
+   - Per client:
+       - total reviews
+       - reply rate
+       - avg response time
+       - sentiment breakdown
+       - keyword usage tracking
+
+--------------------------------------------------
+
+🏗️ TECH STACK REQUIREMENTS:
+
+Frontend:
+- React.js (Next.js preferred)
+- Tailwind CSS
+
+Backend:
+- Node.js (Express.js or NestJS)
+
+Database:
+- PostgreSQL
+
+Cache:
+- Redis
+
+Queue:
+- BullMQ
+
+AI:
+- OpenAI API
+
+Authentication:
+- JWT-based login system
+
+Deployment:
+- Backend: AWS / Railway / GCP
+- Frontend: Vercel
+
+--------------------------------------------------
+
+🗄️ DATABASE DESIGN:
+
+Tables:
+
+Users:
+- id
+- email
+- password
+- role (admin / client)
+- tenant_id
+
+Tenants:
+- id
+- business_name
+- primary_keyword
+- secondary_keywords
+- location
+- tone
+- auto_reply_enabled
+
+Tokens:
+- tenant_id
+- access_token
+- refresh_token
+- expiry
+
+Reviews:
+- review_id
+- tenant_id
+- rating
+- comment
+- reviewer_name
+- status (pending / approved / replied)
+- ai_reply
+- final_reply
+
+--------------------------------------------------
+
+🤖 AI PROMPT LOGIC:
+
+Create dynamic prompts using:
+
+Business Name: {business_name}
+Primary Keyword: {primary_keyword}
+Location: {location}
+Tone: {tone}
+
+Instructions:
+- Keep reply under 3 lines
+- Mention service once naturally
+- Include business name once
+- Optionally include location
+- Avoid repetition
+- Be human and conversational
+
+--------------------------------------------------
+
+🔄 SYSTEM FLOW:
+
+1. Cron job triggers
+2. Fetch reviews from Google API
+3. Filter new reviews
+4. Store in database
+5. Send to queue
+6. Worker processes review:
+    - Analyze sentiment
+    - Generate AI reply
+    - Store reply
+7. Decision engine:
+    - Positive → auto post
+    - Negative → send to dashboard
+8. Client approves or edits reply
+9. Post reply via API
+10. Update analytics
+
+--------------------------------------------------
+
+🔐 SECURITY:
+
+- Encrypt tokens
+- Use HTTPS
+- Protect APIs with JWT
+- Role-based access control
+- Tenant data isolation
+
+--------------------------------------------------
+
+⚡ ADVANCED FEATURES:
+
+- Semantic keyword variation engine
+- A/B testing replies
+- Multi-location support
+- Custom tone per client
+- Audit logs
+
+--------------------------------------------------
+
+📦 OUTPUT REQUIRED:
+
+Generate:
+
+1. Complete backend code (Node.js)
+2. API endpoints (REST structure)
+3. Database schema (SQL)
+4. Frontend pages (React structure)
+5. AI integration code (OpenAI)
+6. Queue + worker implementation
+7. OAuth integration
+8. Deployment instructions
+
+--------------------------------------------------
+
+Build this as a scalable SaaS product ready for production.
