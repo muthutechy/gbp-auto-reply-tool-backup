@@ -85,6 +85,19 @@ export const api = {
       body: JSON.stringify(data),
     });
   },
+    getGoogleStatus() {
+    return request<{ connected: boolean; tenantId: string }>("/google/status");
+  },
+
+  connectGoogle() {
+    return request<{ url: string }>("/google/auth");
+  },
+
+  disconnectGoogle() {
+    return request<{ success: boolean }>("/google/disconnect", {
+      method: "DELETE",
+    });
+  },
 };
 
 export { ApiError };
