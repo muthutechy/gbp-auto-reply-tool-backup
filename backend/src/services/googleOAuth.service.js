@@ -61,6 +61,7 @@ async function discoverDefaultLocation(auth) {
   const accountMgmt = google.mybusinessaccountmanagement({ version: "v1", auth });
 
   const accountsRes = await accountMgmt.accounts.list();
+  console.log("GBP ACCOUNTS:", JSON.stringify(accountsRes.data, null, 2));
   const account = accountsRes.data.accounts?.[0];
 
   if (!account?.name) {
@@ -75,6 +76,7 @@ async function discoverDefaultLocation(auth) {
     readMask: "name,title",
     pageSize: 1,
   });
+  console.log("GBP LOCATIONS:", JSON.stringify(locationsRes.data, null, 2));
 
   const location = locationsRes.data.locations?.[0];
   if (!location?.name) {
