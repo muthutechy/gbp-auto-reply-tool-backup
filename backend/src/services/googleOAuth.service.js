@@ -34,14 +34,29 @@ async function handleCallback({ code, state }) {
     throw createError("Authorization code missing", 400);
   }
 
-  const { tenantId } = parseState(state);
-  const oauth2Client = createOAuth2Client();
-  const { tokens } = await oauth2Client.getToken(code);
+  console.log("STEP 1 - CALLBACK START");
 
-  oauth2Client.setCredentials(tokens);
-  await googleTokenService.saveTokens(tenantId, tokens);
+const { tenantId } = parseState(state);
+console.log("STEP 2 - TENANT:", tenantId);
 
-  const { accountId, locationId } = await discoverDefaultLocation(oauth2Client);
+const oauth2Client = createOAuth2Client();
+
+const { tokens } = await oauth2Client.getToken(code);
+console.log("STEP 3 - TOKEN RECEIVED");
+
+oauth2Client.setCredentials(tokens);
+
+await googleTokenService.saveTokens(tenantId, tokens);
+console.log("STEP 4 - TOKENS SAVED");
+
+const { accountId, locationId } =
+  await discoverDefaultLocation(oauth2Client);
+
+console.log(
+  "STEP 5 - LOCATION FOUND",
+  accountId,
+  locationId
+);
 
   const { error } = await supabase()
     .from("tenants")
