@@ -81,7 +81,17 @@ async function discoverDefaultLocation(auth) {
     auth,
   });
 
-  const accountsRes = await accountMgmt.accounts.list();
+  let accountsRes;
+
+try {
+  accountsRes = await accountMgmt.accounts.list();
+} catch (err) {
+  console.error(
+    "GBP ACCOUNTS ERROR:",
+    JSON.stringify(err.response?.data || err.message, null, 2)
+  );
+  throw err;
+}
 
   console.log(
     "GBP 2 - ACCOUNTS",
