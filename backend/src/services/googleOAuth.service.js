@@ -72,33 +72,66 @@ console.log(
 }
 
 async function discoverDefaultLocation(auth) {
+  console.log("GBP 1 - ENTER DISCOVER");
+
   const { google } = require("googleapis");
-  const accountMgmt = google.mybusinessaccountmanagement({ version: "v1", auth });
+
+  const accountMgmt = google.mybusinessaccountmanagement({
+    version: "v1",
+    auth,
+  });
 
   const accountsRes = await accountMgmt.accounts.list();
-  console.log("GBP ACCOUNTS:", JSON.stringify(accountsRes.data, null, 2));
+
+  console.log(
+    "GBP 2 - ACCOUNTS",
+    JSON.stringify(accountsRes.data, null, 2)
+  );
+
   const account = accountsRes.data.accounts?.[0];
 
   if (!account?.name) {
-    throw createError("No Google Business accounts found for this user", 404);
+    throw createError(
+      "No Google Business accounts found for this user",
+      404
+    );
   }
 
   const accountId = account.name.replace("accounts/", "");
-  const businessInfo = google.mybusinessbusinessinformation({ version: "v1", auth });
+
+  const businessInfo = google.mybusinessbusinessinformation({
+    version: "v1",
+    auth,
+  });
 
   const locationsRes = await businessInfo.accounts.locations.list({
     parent: account.name,
     readMask: "name,title",
     pageSize: 1,
   });
-  console.log("GBP LOCATIONS:", JSON.stringify(locationsRes.data, null, 2));
+
+  console.log(
+    "GBP 3 - LOCATIONS",
+    JSON.stringify(locationsRes.data, null, 2)
+  );
 
   const location = locationsRes.data.locations?.[0];
+
   if (!location?.name) {
-    throw createError("No business locations found for this account", 404);
+    throw createError(
+      "No business locations found for this account",
+      404
+    );
   }
 
   const locationId = location.name.split("/").pop();
+
+  console.log(
+    "GBP 4 - FOUND",
+    accountId,
+    locationId
+  );
+
   return { accountId, locationId };
 }
 
